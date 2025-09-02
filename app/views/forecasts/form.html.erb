@@ -6,18 +6,20 @@
 
 <h1>Enter Address</h1>
 
-<%= form_with url: forecast_path, method: :get, local: true do |form| %>
-  <div>
-    <%= form.label :address, "Address" %>
-    <input type="text" id="autocomplete" placeholder="Enter your address" autocomplete="off">
-  </div>
+<div class="form-container">
+  <%= form_with url: forecast_path, method: :get, local: true do |form| %>
+    <div class="form-group">
+      <%= form.label :address, "Address", class: "form-label" %>
+      <input type="text" id="autocomplete" placeholder="Enter your address" autocomplete="off" class="form-control">
+    </div>
 
-  <%= form.hidden_field :zip_code, id: "zip_code" %>
+    <%= form.hidden_field :zip_code, id: "zip_code" %>
 
-  <div>
-    <%= form.submit "Get Forecast" %>
-  </div>
-<% end %>
+    <div class="form-group">
+      <%= form.submit "Get Forecast", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>
 
 <script>
   function initAutocomplete() {
@@ -26,21 +28,55 @@
 
     autocomplete.addListener('place_changed', () => {
       const place = autocomplete.getPlace();
-      let zipCode = "";
+      const zipCodeComponent = place.address_components.find(component =>
+        component.types.includes('postal_code')
+      );
 
-      // Extract the zip code from the address components
-      if (place.address_components) {
-        place.address_components.forEach(component => {
-          if (component.types.includes("postal_code")) {
-            zipCode = component.long_name;
-          }
-        });
-      }
-
-      // Set the zip code in the hidden field
+      const zipCode = zipCodeComponent ? zipCodeComponent.long_name : '';
       document.getElementById('zip_code').value = zipCode;
     });
   }
 </script>
 
 <script src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['GOOGLE_MAPS_API_KEY']%>&libraries=places&callback=initAutocomplete" async defer></script>
+
+<style>
+  .form-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  .form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+</style>
