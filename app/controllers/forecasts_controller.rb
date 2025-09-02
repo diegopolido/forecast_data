@@ -16,10 +16,12 @@ class ForecastsController < ApplicationController
 
     if cached_forecast
       @forecast = cached_forecast
+      @from_cache = true
     else
       @forecast = ForecastService.call(zip_code)
       if @forecast
         Rails.cache.write(cache_key, @forecast, expires_in: CACHE_EXPIRATION)
+        @from_cache = false
       else
         flash.now[:error] = "Unable to fetch forecast"
         render :form

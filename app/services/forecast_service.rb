@@ -29,7 +29,7 @@ class ForecastService
     JSON.parse(response)
   end
   def weather
-    url = "http://api.openweathermap.org/data/2.5/weather?zip=#{zip_code},us&units=metric&appid=#{api_key}"
+    url = "http://api.openweathermap.org/data/2.5/weather?zip=#{zip_code},us&units=imperial&appid=#{api_key}"
     data = parsed_data(url)
 
     return nil unless data["main"]
@@ -45,7 +45,7 @@ class ForecastService
   end
 
   def forecast
-    url = "http://api.openweathermap.org/data/2.5/forecast?zip=#{zip_code},us&units=metric&appid=#{api_key}"
+    url = "http://api.openweathermap.org/data/2.5/forecast?zip=#{zip_code},us&units=imperial&appid=#{api_key}"
     data = parsed_data(url)
 
     return nil unless data["list"]
