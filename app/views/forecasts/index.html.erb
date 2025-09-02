@@ -1,0 +1,29 @@
+<h1>Weather Forecast</h1>
+
+<% if @forecast %>
+  <div>
+    <h2>Current Weather</h2>
+    <p><strong>Temperature:</strong> <%= @forecast[:current_weather][:temperature] %>°C</p>
+    <p><strong>High:</strong> <%= @forecast[:current_weather][:high] %>°C</p>
+    <p><strong>Low:</strong> <%= @forecast[:current_weather][:low] %>°C</p>
+    <p><strong>Description:</strong> <%= @forecast[:current_weather][:description] %></p>
+  </div>
+
+  <hr>
+
+  <div>
+    <h2>3-hour forecast for 5 days</h2>
+    <% @forecast[:forecast].each do |day| %>
+      <div>
+        <p><strong>Date and Time:</strong> <%= day[:datetime] %></p>
+        <p><strong>Temperature:</strong> <%= day[:temperature] %>°C</p>
+        <p><strong>High:</strong> <%= day[:high] %>°C</p>
+        <p><strong>Low:</strong> <%= day[:low] %>°C</p>
+        <p><strong>Description:</strong> <%= day[:description] %></p>
+      </div>
+      <hr>
+    <% end %>
+  </div>
+<% else %>
+  <p>No forecast available.</p>
+<% end %>
