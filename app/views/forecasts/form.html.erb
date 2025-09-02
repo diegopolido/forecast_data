@@ -1,0 +1,46 @@
+<% if flash[:error] %>
+  <div class="flash-error">
+    <%= flash[:error] %>
+  </div>
+<% end %>
+
+<h1>Enter Address</h1>
+
+<%= form_with url: forecast_path, method: :get, local: true do |form| %>
+  <div>
+    <%= form.label :address, "Address" %>
+    <input type="text" id="autocomplete" placeholder="Enter your address" autocomplete="off">
+  </div>
+
+  <%= form.hidden_field :zip_code, id: "zip_code" %>
+
+  <div>
+    <%= form.submit "Get Forecast" %>
+  </div>
+<% end %>
+
+<script>
+  function initAutocomplete() {
+    const input = document.getElementById('autocomplete');
+    const autocomplete = new google.maps.places.Autocomplete(input);
+
+    autocomplete.addListener('place_changed', () => {
+      const place = autocomplete.getPlace();
+      let zipCode = "";
+
+      // Extract the zip code from the address components
+      if (place.address_components) {
+        place.address_components.forEach(component => {
+          if (component.types.includes("postal_code")) {
+            zipCode = component.long_name;
+          }
+        });
+      }
+
+      // Set the zip code in the hidden field
+      document.getElementById('zip_code').value = zipCode;
+    });
+  }
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['GOOGLE_MAPS_API_KEY']%>&libraries=places&callback=initAutocomplete" async defer></script>

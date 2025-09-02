@@ -1,4 +1,3 @@
-
 class ForecastsController < ApplicationController
   require "net/http"
   require "json"
@@ -6,11 +5,12 @@ class ForecastsController < ApplicationController
   CACHE_EXPIRATION = 30.minutes
 
   def index
-    zip_code = params[:zip_code]
-    if zip_code.blank?
-      render json: { error: "Zip code is required" }, status: :bad_request and return
+    if params[:zip_code].blank?
+      render :form
+      return
     end
 
+    zip_code = params[:zip_code]
     cache_key = "forecast_#{zip_code}"
     cached_forecast = Rails.cache.read(cache_key)
 
@@ -21,7 +21,8 @@ class ForecastsController < ApplicationController
       if @forecast
         Rails.cache.write(cache_key, @forecast, expires_in: CACHE_EXPIRATION)
       else
-        render json: { error: "Unable to fetch forecast" }, status: :unprocessable_entity and return
+        flash.now[:error] = "Unable to fetch forecast"
+        render :form
       end
     end
   end
