@@ -82,7 +82,7 @@
       });
 
       const ctx = document.getElementById('forecastChart').getContext('2d');
-      const labels = [<%= raw @forecast[:forecast].map { |day| "'#{day[:datetime]}'" }.join(', ') %>];
+      const labels = <%= @forecast[:forecast].map { |day| day[:datetime] }.to_json.html_safe %>;
       const temperatures = [<%= @forecast[:forecast].map { |day| day[:temperature] }.join(', ') %>];
       const highs = [<%= @forecast[:forecast].map { |day| day[:high] }.join(', ') %>];
       const lows = [<%= @forecast[:forecast].map { |day| day[:low] }.join(', ') %>];
