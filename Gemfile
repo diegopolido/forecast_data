@@ -49,6 +49,11 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  gem "dotenv-rails"
+
+  gem "rspec-rails", "~> 6.0.0"
+  gem "webmock"
 end
 
 group :development do

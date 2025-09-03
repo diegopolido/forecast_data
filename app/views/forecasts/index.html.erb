@@ -1,0 +1,172 @@
+<%= link_to 'Back to Form', forecast_path, class: 'btn btn-primary' %>
+
+<h1>Weather Forecast</h1>
+
+<% if @forecast %>
+  <div class="current-weather">
+    <h2>Current Weather</h2>
+    <h3>Source: <%= @from_cache ? 'Cache' : 'API' %></h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Temperature</th>
+          <th>High</th>
+          <th>Low</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><%= @forecast[:current_weather][:temperature] %>°F</td>
+          <td><%= @forecast[:current_weather][:high] %>°F</td>
+          <td><%= @forecast[:current_weather][:low] %>°F</td>
+          <td><%= @forecast[:current_weather][:description] %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr>
+
+  <div>
+    <button id="toggleViewButton">Show Chart</button>
+  </div>
+
+  <div id="forecastTable" class="forecast-table">
+    <h2>5-Day Forecast</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Date and Time</th>
+          <th>Temperature</th>
+          <th>High</th>
+          <th>Low</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @forecast[:forecast].each do |day| %>
+          <tr>
+            <td><%= day[:datetime] %></td>
+            <td><%= day[:temperature] %>°F</td>
+            <td><%= day[:high] %>°F</td>
+            <td><%= day[:low] %>°F</td>
+            <td><%= day[:description] %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="forecastChartContainer" class="forecast-chart" style="display: none;">
+    <h2>Temperature Chart</h2>
+    <canvas id="forecastChart"></canvas>
+  </div>
+
+  <script>
+    const onReady = () => {
+      const toggleButton = document.getElementById('toggleViewButton');
+      const table = document.getElementById('forecastTable');
+      const chartContainer = document.getElementById('forecastChartContainer');
+
+      toggleButton.addEventListener('click', () => {
+        if (table.style.display === 'none') {
+          table.style.display = '';
+          chartContainer.style.display = 'none';
+          toggleButton.textContent = 'Show Chart';
+        } else {
+          table.style.display = 'none';
+          chartContainer.style.display = '';
+          toggleButton.textContent = 'Show Table';
+        }
+      });
+
+      const ctx = document.getElementById('forecastChart').getContext('2d');
+      const labels = <%= @forecast[:forecast].map { |day| day[:datetime] }.to_json.html_safe %>;
+      const temperatures = [<%= @forecast[:forecast].map { |day| day[:temperature] }.join(', ') %>];
+      const highs = [<%= @forecast[:forecast].map { |day| day[:high] }.join(', ') %>];
+      const lows = [<%= @forecast[:forecast].map { |day| day[:low] }.join(', ') %>];
+
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Temperature (°F)',
+              data: temperatures,
+              borderColor: 'rgba(75, 192, 192, 1)',
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderWidth: 1
+            },
+            {
+              label: 'High (°F)',
+              data: highs,
+              borderColor: 'rgb(192, 97, 75)',
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderWidth: 1
+            },
+            {
+              label: 'Low (°F)',
+              data: lows,
+              borderColor: 'rgb(75, 100, 192)',
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderWidth: 1
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top',
+            },
+          },
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Date and Time'
+              }
+            },
+            y: {
+              title: {
+                display: true,
+                text: 'Temperature (°F)'
+              }
+            }
+          }
+        }
+      });
+    };
+    document.addEventListener('DOMContentLoaded', onReady);
+    document.addEventListener('turbo:load', onReady);
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+
+    .table th, .table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+
+    .table th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+    }
+
+    .forecast-chart {
+      margin-top: 30px;
+    }
+  </style>
+<% else %>
+  <p>No forecast available.</p>
+<% end %>
