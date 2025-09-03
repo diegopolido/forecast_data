@@ -4,7 +4,7 @@
   </div>
 <% end %>
 
-<h1>Enter Address</h1>
+<h1 class="page-title">Enter Address</h1>
 
 <div class="form-container">
   <%= form_with url: forecast_path, method: :get, local: true do |form| %>
@@ -41,6 +41,13 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['GOOGLE_MAPS_API_KEY']%>&libraries=places&callback=initAutocomplete" async defer></script>
 
 <style>
+  .page-title {
+    text-align: center;
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+
   .form-container {
     max-width: 500px;
     margin: 0 auto;
