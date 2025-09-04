@@ -40,7 +40,7 @@ RSpec.describe ForecastsController, type: :request do
       let(:zip_code) { "99999" }
 
       before do
-        allow(ForecastService).to receive(:call).and_return({ errors: ["Error retreiving from forecast service"] })
+        allow(ForecastService).to receive(:call).and_return({ errors: [ "Error retreiving from forecast service" ] })
       end
 
       it "renders the form template with an error message" do

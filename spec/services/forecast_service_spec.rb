@@ -65,7 +65,7 @@ RSpec.describe ForecastService, type: :service do
 
       it "returns errors" do
         result = ForecastService.call(zip_code)
-        expect(result).to eq({ errors: ["Error retreiving from forecast service"] })
+        expect(result).to eq({ errors: [ "Error retreiving from forecast service" ] })
       end
     end
   end
