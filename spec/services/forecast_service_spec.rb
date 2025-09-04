@@ -45,9 +45,9 @@ RSpec.describe ForecastService, type: :service do
           }.to_json)
       end
 
-      it "returns nil" do
+      it "returns errors" do
         result = ForecastService.call(zip_code)
-        expect(result).to be_nil
+        expect(result).to eq({ errors: [ "Error retreiving from weather service" ] })
       end
     end
 
@@ -63,9 +63,9 @@ RSpec.describe ForecastService, type: :service do
           .to_return(status: 500, body: {}.to_json)
       end
 
-      it "returns nil" do
+      it "returns errors" do
         result = ForecastService.call(zip_code)
-        expect(result).to be_nil
+        expect(result).to eq({ errors: ["Error retreiving from forecast service"] })
       end
     end
   end

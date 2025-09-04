@@ -5,7 +5,7 @@
 <% if @forecast %>
   <div class="current-weather">
     <h2>Current Weather</h2>
-    <h3>Source: <%= @from_cache ? 'Cache' : 'API' %></h3>
+    <h3>Source: <%= @forecast[:from_cache] ? 'Cache' : 'API' %></h3>
     <table class="table">
       <thead>
         <tr>
